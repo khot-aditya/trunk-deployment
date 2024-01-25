@@ -1,30 +1,29 @@
-# React + TypeScript + Vite
+# Trunk Based Workflow
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Trunk-based development is a version control management practice where developers merge small, frequent updates to a core “trunk” or main branch. Since it streamlines merging and integration phases, it helps achieve CI/CD and increases software delivery and organizational performance.
 
-Currently, two official plugins are available:
+## Usage Commands
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Run deploy.sh command to show available options
 
-## Expanding the ESLint configuration
+  ```bash
+  deploy.sh
+  ```
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Select options for deployment
 
-- Configure the top-level `parserOptions` property like this:
+  ```bash
+  Select deployment option:
+  1. Development
+  2. Staging
+  3. Production
+  Enter the option number:
+  ```
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+- Once it is selected the docker will create new image
+  for selected environment and run docker container on specified port.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+# Todo
+
+- Add option for instant rollback
+- Add option to rollback to particular hash
