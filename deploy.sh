@@ -16,7 +16,7 @@ deploy() {
         # Change the current directory to the backend project directory.
 
         echo "Pulling from main branch"
-        git pull origin main
+        git clone https://github.com/khot-aditya/trunk-deployment.git .
         # Pull the latest code from the development branch.
 
         echo "building docker image"
