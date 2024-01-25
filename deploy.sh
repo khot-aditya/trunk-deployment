@@ -1,63 +1,64 @@
 #!/bin/bash
 
-# root user check
-# if [[ $EUID -ne 0 ]]; then
-#     echo "This script must be run as root"
-#     # If the effective user ID is not 0 (root), the script will exit.
-#     exit 1
-# fi
-
+# Function to deploy the application
 deploy() {
+    local environment=""
+    local container_name=""
+    local port=""
+
     case $1 in
     1)
-        echo "Deploying Development..."
-        echo "Wait and watch!"
-        # cd /root/project/dev/backend
-        # Change the current directory to the backend project directory.
-
-        echo "Pulling from main branch"
-        git clone https://github.com/khot-aditya/trunk-deployment.git
-        # Pull the latest code from the development branch.
-
-        cd ./trunk-deployment
-
-        echo "building docker image"
-        docker build . -t development
-        # Build a Docker image with the tag development.
-
-        echo "stopping & removing container"
-        docker stop development-container || true && docker rm development-container || true
-        # Stop and remove the existing Docker container. If the container does not exist, the command will not fail because of the || true.
-
-        echo "starting new container"
-        docker run -p 80:80 -d --name development-container development
-        # Run a new Docker container from the image we just built.
-
-        docker system prune -f
-        # Remove unused data to free up space.
-
-        echo "The application has been deployed successfully."
-        docker logs -f development-container
-        # Display the logs of the new container.
-        break
+        environment="development"
+        container_name="development-container"
+        port="3000"
         ;;
-
     2)
-        echo "Deploying Staging..."
-        # Add commands for deploying web app
+        environment="staging"
+        container_name="staging-container"
+        port="3001"
         ;;
-
     3)
-        echo "Deploying Production..."
-        # Add commands for deploying web app
+        environment="production"
+        container_name="production-container"
+        port="3002"
         ;;
-
     *)
         echo "Invalid option. Exiting."
         exit 1
         ;;
     esac
+
+    echo "Deploying $environment..."
+    echo "Wait and watch!"
+
+    # Pull the latest code from the main branch.
+    echo "Pulling from main branch"
+    git pull origin main
+
+    echo "Building docker image"
+    docker build . -t $environment
+    # Build a Docker image with the corresponding tag.
+
+    echo "Stopping & removing existing container"
+    docker stop $container_name || true && docker rm $container_name || true
+    # Stop and remove the existing Docker container. If the container does not exist, the command will not fail because of the || true.
+
+    echo "Starting new container"
+    docker run -p $port:80 -d --name $container_name $environment
+    # Run a new Docker container from the image we just built.
+
+    docker system prune -f
+    # Remove unused data to free up space.
+
+    echo "The application has been deployed successfully."
+    docker logs -f $container_name
 }
+
+# Check if the script is run as root
+if [[ $EUID -ne 0 ]]; then
+    echo "This script should be run as root"
+    exit 1
+fi
 
 if [ -z "$1" ]; then
     # If no option is provided, show options and ask for input
@@ -69,6 +70,6 @@ if [ -z "$1" ]; then
     read -p "Enter the option number: " option
     deploy $option
 else
-    # If option is provided, run the corresponding case
-    deploy $@
+    # If an option is provided, run the corresponding case
+    deploy $1
 fi
