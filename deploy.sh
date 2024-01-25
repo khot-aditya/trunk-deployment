@@ -16,8 +16,10 @@ deploy() {
         # Change the current directory to the backend project directory.
 
         echo "Pulling from main branch"
-        git clone https://github.com/khot-aditya/trunk-deployment.git .
+        git clone https://github.com/khot-aditya/trunk-deployment.git
         # Pull the latest code from the development branch.
+
+        cd ./trunk-deployment
 
         echo "building docker image"
         docker build . -t development
@@ -28,7 +30,7 @@ deploy() {
         # Stop and remove the existing Docker container. If the container does not exist, the command will not fail because of the || true.
 
         echo "starting new container"
-        docker run -p 80:3001 -d --name development-container development
+        docker run -p 80:80 -d --name development-container development
         # Run a new Docker container from the image we just built.
 
         docker system prune -f
