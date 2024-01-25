@@ -27,3 +27,7 @@ Trunk-based development is a version control management practice where developer
 
 - Add option for instant rollback
 - Add option to rollback to particular hash
+
+# Source
+
+- https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development
